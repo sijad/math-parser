@@ -29,7 +29,7 @@
 #include <QtGui>
 #include <QMainWindow>
 #include "qcustomplot.h"
-#include "evalMath/mathParser.hpp"
+#include "evalMath/mathParser.h"
 
 
 namespace Ui {

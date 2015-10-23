@@ -91,7 +91,7 @@ void plotwindow::setupPlot()
     QVector<double> y(x.size());
     std::string pn0;
     std::string pn1;
-    if(mp_params->size() <= 2) {
+    if(mp_params->size() == 2 || mp_params->size() == 1) {
       pn0 = mp_params->at(0).toUtf8().constData();
     }
     if(mp_params->size() == 2) {
@@ -100,7 +100,7 @@ void plotwindow::setupPlot()
     FOR_EACH_ENUMERATE(j, i, x) {
       if(mp_params->size() == 1) {
         mp->add_var(pn0, (long double) *i);
-        y[j] = (double) mp->eval();
+        // y[j] = (double) mp->eval();
       }else if(mp_params->size() == 2) {
         mp->add_var(pn0, (long double) *i);
         // mp->add_var(pn1, 0.0);
@@ -109,10 +109,8 @@ void plotwindow::setupPlot()
         // mp->add_var(pn0, 0.0);
         mp->add_var(pn1, (long double) *i);
         // *i = (double) mp->eval();
-
-        y[j] = (double) mp->eval();
-
       }
+      y[j] = (double) mp->eval();
     }
     ui->plot->graph(0)->setData(x, y);
     ui->plot->axisRect()->setupFullAxesBox(true);

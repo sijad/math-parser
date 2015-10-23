@@ -4,13 +4,13 @@
 #include <iomanip>
 
 #include "mainWindow.h"
-#include "evalMath/mathParser.hpp"
+#include "evalMath/mathParser.h"
 
 template <typename T>
 std::string to_string_with_precision(const T a_value, const int n = 6)
 {
     std::ostringstream out;
-    out << std::setprecision(n) << a_value;
+    out << std::fixed << std::setprecision(n) << a_value;
     return out.str();
 }
 
@@ -23,7 +23,7 @@ mainWindow::mainWindow()
   QTextCursor textCursor;
   textCursor.setPosition(0, QTextCursor::MoveAnchor);
   inputText->setTextCursor( textCursor );
-  inputText->setText("f(x)=cos(deg(x))");
+  inputText->setText("f(x)=cos(x)");
 
   calcButton = new QPushButton("&Calculate");
   showPlot = new QPushButton("&Show Plot");
@@ -74,13 +74,21 @@ void mainWindow::calulate() {
     fun = text.substr(text.find('=')+1);
     mathParser *mp = new mathParser(fun);
     FOR_EACH(i, params) {
-      double d = QInputDialog::getDouble(this, tr("Enter Value for `%1`").arg(*i), tr("Amount:"), 0, -2147483647, 2147483647, 7);
-      mp->add_var(i->toUtf8().constData(), (long double) d);
+      QString d = QInputDialog::getText(this, tr("Enter Value for `%1`").arg(*i), tr("Amount:"));
+      long double d2;
+      try {
+        mathParser *mp2 = new mathParser(d.toUtf8().constData());
+        d2 = mp2->eval();
+      }catch(std::runtime_error& e) {
+        d2 = d.toDouble();
+      }
+
+      mp->add_var(i->toUtf8().constData(), d2);
     }
     try {
       QString ans = QString(to_string_with_precision<long double> (mp->eval(), 15).c_str());
       outputText->setText(ans);
-    }catch(runtime_error& e) {
+    }catch(std::runtime_error& e) {
       QMessageBox msgBox;
       msgBox.setText(e.what());
       msgBox.setIcon(QMessageBox::Critical);
@@ -115,7 +123,7 @@ void mainWindow::showPlots() {
       try {
         plotwindow *plotwin = new plotwindow(0, mp, params);
         plotwin->show();
-      }catch(runtime_error& e) {
+    }catch(std::runtime_error& e) {
         QMessageBox msgBox;
         msgBox.setText(e.what());
         msgBox.setIcon(QMessageBox::Critical);
