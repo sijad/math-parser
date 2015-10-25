@@ -19,12 +19,14 @@ public:
 private slots:
    void showPlots();
    void calulate();
+   void calcGivenIntegral();
 
 private:
   //  PreviewWindow *previewWindow;
   TextEdit *inputText;
   TextEdit *outputText;
   QPushButton *calcButton;
+  QPushButton *givenIntegral;
   QPushButton *showPlot;
   QPushButton *quitButton;
 };

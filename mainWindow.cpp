@@ -10,7 +10,8 @@ template <typename T>
 std::string to_string_with_precision(const T a_value, const int n = 6)
 {
     std::ostringstream out;
-    out << std::fixed << std::setprecision(n) << a_value;
+    // out << std::fixed << std::setprecision(n) << a_value;
+    out << std::setprecision(n) << a_value;
     return out.str();
 }
 
@@ -26,6 +27,7 @@ mainWindow::mainWindow()
   inputText->setText("f(x)=cos(x)");
 
   calcButton = new QPushButton("&Calculate");
+  givenIntegral = new QPushButton("&Given Integral");
   showPlot = new QPushButton("&Show Plot");
   quitButton = new QPushButton("&Quit");
 
@@ -34,6 +36,7 @@ mainWindow::mainWindow()
   layout->addWidget(inputText);
   layout->addWidget(outputText);
   layout->addWidget(calcButton);
+  layout->addWidget(givenIntegral);
   layout->addWidget(showPlot);
   layout->addWidget(quitButton);
 
@@ -41,6 +44,7 @@ mainWindow::mainWindow()
   outputText->setPlaceholderText("Answer goes here");
 
   connect(calcButton, SIGNAL(clicked()), this, SLOT(calulate()));
+  connect(givenIntegral, SIGNAL(clicked()), this, SLOT(calcGivenIntegral()));
   connect(showPlot, SIGNAL(clicked()), this, SLOT(showPlots()));
   connect(quitButton, SIGNAL(clicked()), qApp, SLOT(quit()));
 
@@ -49,6 +53,61 @@ mainWindow::mainWindow()
   setLayout(mainLayout);
 
   setWindowTitle(tr("Eval Math By Sajjad Hashemian"));
+}
+
+void mainWindow::calcGivenIntegral() {
+    QString t = inputText->toPlainText();
+    std::string text = t.toUtf8().constData();
+    if (!t.isEmpty() && t != inputText->getPlaceholderText()) {
+      std::string fun = text.substr(text.find('('), text.find('=') - text.find('('));
+      QVector<QString> *params = new QVector<QString>();
+      std::string buff;
+      for(unsigned long i=0;i<fun.length();++i) {
+        if(fun[i] != ' ' && fun[i] != '(' && fun[i] != ')') {
+          if(fun[i] != ',')
+            buff += fun[i];
+          else if(!buff.empty()) {
+            params->push_back(QString(buff.c_str()));
+            buff = "";
+          }
+        }
+      }
+      if(!buff.empty()) {
+        params->push_back(QString(buff.c_str()));
+      }
+    fun = text.substr(text.find('=')+1);
+      QMessageBox msgBox;
+  if(params->size() == 1) {
+      double lower = QInputDialog::getDouble(this, tr("Enter Lower Bound Value"), tr("Amount:"), 0, -2147483647, 2147483647, 7);
+      double upper = QInputDialog::getDouble(this, tr("Enter Upper Bound Value"), tr("Amount:"), 0, -2147483647, 2147483647, 7);
+      if(lower < upper) {
+          try {
+            mathParser *amp = new mathParser(fun);
+            amp->add_var(params->at(0).toUtf8().constData(), lower);
+            long double a = amp->eval();
+            amp->add_var(params->at(0).toUtf8().constData(), upper);
+            long double b = amp->eval();
+
+            QString ans = QString(to_string_with_precision<long double> (b-a, 15).c_str());
+            outputText->setText(ans);
+
+          }catch(std::runtime_error& e) {
+              msgBox.setText(e.what());
+              msgBox.setIcon(QMessageBox::Critical);
+              msgBox.exec();
+          }
+      }else{
+          msgBox.setText("Lower bound should be smaller than upper bound!");
+          msgBox.setIcon(QMessageBox::Critical);
+          msgBox.exec();
+      }
+  }else{
+      msgBox.setText("Given integram must have exactly 1 parameter.");
+      msgBox.setIcon(QMessageBox::Critical);
+      msgBox.exec();
+  }
+}
+
 }
 
 void mainWindow::calulate() {
@@ -74,7 +133,10 @@ void mainWindow::calulate() {
     fun = text.substr(text.find('=')+1);
     mathParser *mp = new mathParser(fun);
     FOR_EACH(i, params) {
-      QString d = QInputDialog::getText(this, tr("Enter Value for `%1`").arg(*i), tr("Amount:"));
+      bool ok = false;
+      QString d = QInputDialog::getText(this, tr("Enter Value for `%1`").arg(*i), tr("Value:"), QLineEdit::Normal, "", &ok);
+      if(!ok)
+        d = "0";
       long double d2;
       try {
         mathParser *mp2 = new mathParser(d.toUtf8().constData());
@@ -131,7 +193,7 @@ void mainWindow::showPlots() {
       }
     }else{
       QMessageBox msgBox;
-      msgBox.setText("Plot only works for less than 1 parameter.");
+      msgBox.setText("Plot only works for less than 2 parameters.");
       msgBox.setIcon(QMessageBox::Critical);
       msgBox.exec();
     }

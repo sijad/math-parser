@@ -25,8 +25,8 @@
 
 
 // const long double PI = 3.14159265358979323846264338327950288419716939937510L;
-// const long double PI = std::acos(-1.0L);
-const long double PI = std::atan(1.0L) * 4;
+const long double PI = std::acos(-1.0L);
+// const long double PI = std::atan(1.0L) * 4;
 
 long double rad(long double a);
 

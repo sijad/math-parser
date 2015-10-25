@@ -56,19 +56,46 @@ long double log_func::run(std::vector<long double> params) {
 }
 
 long double sin_func::run(std::vector<long double> params) {
-	return std::sin(params[0]);
+	if(params[0] == 0 || params[0] == PI || params[0] == 2 * PI) {
+		return 0;
+	}else if(params[0] == PI/2) {
+		return 1;
+	}else if(params[0] == 1.5 * PI) {
+		return -1;
+	}else{
+		return std::sin(params[0]);
+	}
 }
 
 long double cos_func::run(std::vector<long double> params) {
-	return std::cos(params[0]);
+	if(params[0] == PI / 2 || params[0] == 1.5 * PI) {
+		return 0;
+	}else if(params[0] == 0 || params[0] == 2 * PI) {
+		return 1;
+	}else if(params[0] == PI) {
+		return -1;
+	}else{
+		return std::cos(params[0]);
+	}
 }
 
 long double tan_func::run(std::vector<long double> params) {
-	return std::tan(params[0]);
+	if(params[0] == 0 || params[0] == PI || params[0] == 2 * PI) {
+		return 0;
+	}else if(params[0] == PI/4 || params[0] == 1.25 * PI) {
+		return 1;
+	}else if(params[0] == 0.75 * PI || params[0] == 1.75 * PI) {
+		return -1;
+	}else if(params[0] == PI/2 || params[0] == 1.5 * PI) {
+		return std::numeric_limits<long double>::infinity();
+	}else{
+		return std::tan(params[0]);
+	}
 }
 
 long double cot_func::run(std::vector<long double> params) {
-	return 1/std::tan(params[0]);
+	tan_func * tanf = new tan_func();
+	return 1/tanf->run(params);
 }
 
 long double sinh_func::run(std::vector<long double> params) {
