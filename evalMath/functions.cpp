@@ -33,14 +33,15 @@ long double max_func::run(std::vector<long double> params) {
 }
 
 long double pow_func::run(std::vector<long double> params) {
-	long double ret=params[1];
-	int i;
-	if ( params[0] )
-		for ( i=0; i <params[0]-1; i++)
-			ret = params[1]*ret;
-	else
-		ret = 1;
-	return ret;
+	return std::exp(params[0] * std::log(params[1]));
+	// long double ret=params[1];
+	// int i;
+	// if ( params[0] )
+	// 	for ( i=0; i <params[0]-1; i++)
+	// 		ret = params[1]*ret;
+	// else
+	// 	ret = 1;
+	// return ret;
 	// return std::pow(params[1], params[0]);
 }
 
@@ -138,7 +139,7 @@ long double coth_func::run(std::vector<long double> params) {
 }
 
 long double asin_func::run(std::vector<long double> params) {
-	if(params[0] < -1 || params[0] > 1) throw std::runtime_error("The Value must be between -1:1")ffacos;
+	if(params[0] < -1 || params[0] > 1) throw std::runtime_error("The Value must be between -1:1");
 	else if(params[0]==1) return (PI/2);
 	else if(params[0]==-1) return (-PI/2);
 	else return std::atan(params[0]/(std::sqrt(1-(params[0] * params[0]))));
@@ -146,45 +147,46 @@ long double asin_func::run(std::vector<long double> params) {
 }
 
 long double acos_func::run(std::vector<long double> params) {
-	if(params[0] < -1 || params[0] > 1) throw std::runtime_error("The Value must be between -1:1")ffacos;
+	if(params[0] < -1 || params[0] > 1) throw std::runtime_error("The Value must be between -1:1");
 	// else if(params[0]==1) return (PI/2);
 	// else if(params[0]==-1) return (-PI/2);
 	// else return std::atan((std::sqrt(1-(params[0] * params[0])))/params[0]);
 	// return std::log(params[1] + std::sqrt((params[0]+1)) * std::sqrt((params[0]-1)) );
-	return std::acos(params[0]);
+	// return std::acos(params[0]);
+	else return std::atan(1/(std::sqrt(1-(params[0] * params[0]))));
 }
 
 long double atan_func::run(std::vector<long double> params) {
-	if(params[0] < -1 || params[0] > 1) throw std::runtime_error("The Value must be between -1:1")ffacos;
+	if(params[0] < -1 || params[0] > 1) throw std::runtime_error("The Value must be between -1:1");
 	return std::atan(params[0]);
 }
 
 long double acot_func::run(std::vector<long double> params) {
-	if(params[0] < -1 || params[0] > 1) throw std::runtime_error("The Value must be between -1:1")ffacos;
+	if(params[0] < -1 || params[0] > 1) throw std::runtime_error("The Value must be between -1:1");
 	return 1/std::atan(params[0]);
 }
 
 long double asinh_func::run(std::vector<long double> params) {
-	if(params[0] < -1 || params[0] > 1) throw std::runtime_error("The Value must be between -1:1")ffacos;
+	if(params[0] < -1 || params[0] > 1) throw std::runtime_error("The Value must be between -1:1");
 	return log( params[0] + std::sqrt((params[0] * params[0]) + 1) );
 	// return std::asinh(params[0]);
 }
 
 long double acosh_func::run(std::vector<long double> params) {
-	if(params[0] < -1 || params[0] > 1) throw std::runtime_error("The Value must be between -1:1")ffacos;
+	if(params[0] < -1 || params[0] > 1) throw std::runtime_error("The Value must be between -1:1");
 	return log( params[0] + std::sqrt((params[0] * params[0]) - 1) );
 	// return std::acosh(params[0]);
 }
 
 long double atanh_func::run(std::vector<long double> params) {
-	if(params[0] < -1 || params[0] > 1) throw std::runtime_error("The Value must be between -1:1")ffacos;
+	if(params[0] < -1 || params[0] > 1) throw std::runtime_error("The Value must be between -1:1");
 	return log( (1+params[0])/(1-params[0]) )/2;
 
 	// return std::atanh(params[0]);
 }
 
 long double acoth_func::run(std::vector<long double> params) {
-	if(params[0] < -1 || params[0] > 1) throw std::runtime_error("The Value must be between -1:1")ffacos;
+	if(params[0] < -1 || params[0] > 1) throw std::runtime_error("The Value must be between -1:1");
 	return 1/std::atanh(params[0]);
 }
 

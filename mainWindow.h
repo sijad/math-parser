@@ -29,6 +29,7 @@ private:
   QPushButton *givenIntegral;
   QPushButton *showPlot;
   QPushButton *quitButton;
+  long double simpson(mathParser *mp, std::string p, double a, double b, int n);
 };
 
 #endif

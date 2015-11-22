@@ -80,15 +80,16 @@ void mainWindow::calcGivenIntegral() {
   if(params->size() == 1) {
       double lower = QInputDialog::getDouble(this, tr("Enter Lower Bound Value"), tr("Amount:"), 0, -2147483647, 2147483647, 7);
       double upper = QInputDialog::getDouble(this, tr("Enter Upper Bound Value"), tr("Amount:"), 0, -2147483647, 2147483647, 7);
+      double n_val = QInputDialog::getDouble(this, tr("Enter N Value"), tr("Amount:"), 0, -2147483647, 2147483647, 7);
       if(lower < upper) {
           try {
             mathParser *amp = new mathParser(fun);
-            amp->add_var(params->at(0).toUtf8().constData(), lower);
-            long double a = amp->eval();
-            amp->add_var(params->at(0).toUtf8().constData(), upper);
-            long double b = amp->eval();
+            // amp->add_var(params->at(0).toUtf8().constData(), lower);
+            // long double a = amp->eval();
+            // amp->add_var(params->at(0).toUtf8().constData(), upper);
+            // long double b = amp->eval();
 
-            QString ans = QString(to_string_with_precision<long double> (b-a, 15).c_str());
+            QString ans = QString(to_string_with_precision<long double> (simpson(amp, params->at(0).toUtf8().constData(), lower, upper, n_val), 15).c_str());
             outputText->setText(ans);
 
           }catch(std::runtime_error& e) {
@@ -198,4 +199,24 @@ void mainWindow::showPlots() {
       msgBox.exec();
     }
   }
+}
+
+long double mainWindow::simpson(mathParser *mp, std::string p, double a, double b, int n) {
+  // double c = (a+b)/2.0;
+  // double h3 = abs(b-a)/6.0;
+  // return (long double) h3*(fk(a)+4.0*fk(c)+fk(b));
+  long double h = (b-a) / n, x, r;
+  char m = 0;
+  long double s = 0.0;
+  for(x = a; x <= b; x+=h) {
+      mp->add_var(p, x);
+      r = mp->eval();
+      if(x == a || x == b) {
+          s += r;
+      }else{
+          m = !m;
+          s += r * (m+1) * 2.0;
+      }
+  }
+  return s * (h/3.0);
 }
