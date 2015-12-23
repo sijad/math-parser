@@ -33,16 +33,10 @@ long double max_func::run(std::vector<long double> params) {
 }
 
 long double pow_func::run(std::vector<long double> params) {
-	return std::exp(params[0] * std::log(params[1]));
-	// long double ret=params[1];
-	// int i;
-	// if ( params[0] )
-	// 	for ( i=0; i <params[0]-1; i++)
-	// 		ret = params[1]*ret;
-	// else
-	// 	ret = 1;
-	// return ret;
-	// return std::pow(params[1], params[0]);
+	if(params[0] == 1 || params[1] == 1)
+		return params[1];
+		
+	return cpow(params[1], params[0]);
 }
 
 long double sqrt_func::run(std::vector<long double> params) {

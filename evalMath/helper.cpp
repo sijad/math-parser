@@ -33,3 +33,23 @@ long double randNum() {
 	static std::uniform_real_distribution<float> distribution(0.0,1.0);
 	return distribution(generator);
 }
+
+long double cpow(long double x, long double y) {
+	bool sign = false;
+	if(x < 0) {
+		sign = true;
+		x = -x;  
+	}
+	
+	if(y < 0 && y > -1 && std::fmod(std::floor(1/y), 2) == 0) {
+		throw std::runtime_error("Invalid argumant value.");
+	}
+	
+	long double ret = std::exp(y * std::log(x));
+	
+	if(sign) {
+		ret = -ret;
+	}
+	
+	return ret;
+}

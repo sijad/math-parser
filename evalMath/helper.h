@@ -42,4 +42,6 @@ std::string str2Upper(std::string str);
 
 long double randNum();
 
+long double cpow(long double x, long double y);
+
 #endif

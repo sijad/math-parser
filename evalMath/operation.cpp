@@ -21,5 +21,8 @@ long double mod_oper::run(long double n1, long double n2) {
 }
 
 long double pow_oper::run(long double n1, long double n2) {
-	return std::exp(n1 * std::log(n2));
+	if(n1 == 1 || n2 == 1)
+		return n2;
+		
+	return cpow(n1, n2);
 }

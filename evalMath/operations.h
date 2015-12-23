@@ -1,6 +1,7 @@
 #ifndef EVAL_MATH_OPERS_H
 #define EVAL_MATH_OPERS_H
 #include "oper.h"
+#include "helper.h"
 #include <cmath>
 class plus_oper: public oper {
 public:
