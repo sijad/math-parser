@@ -47,7 +47,7 @@ long double cpow(long double x, long double y) {
 	
 	long double ret = std::exp(y * std::log(x));
 	
-	if(sign) {
+	if(sign && std::fmod(std::abs(y), 2) != 0) {
 		ret = -ret;
 	}
 	

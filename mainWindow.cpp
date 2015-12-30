@@ -80,7 +80,7 @@ void mainWindow::calcGivenIntegral() {
   if(params->size() == 1) {
       double lower = QInputDialog::getDouble(this, tr("Enter Lower Bound Value"), tr("Amount:"), 0, -2147483647, 2147483647, 7);
       double upper = QInputDialog::getDouble(this, tr("Enter Upper Bound Value"), tr("Amount:"), 0, -2147483647, 2147483647, 7);
-      double n_val = QInputDialog::getDouble(this, tr("Enter N Value"), tr("Amount:"), 0, -2147483647, 2147483647, 7);
+    //   double n_val = QInputDialog::getDouble(this, tr("Enter N Value"), tr("Amount:"), 0, -2147483647, 2147483647, 7);
       if(lower < upper) {
           try {
             mathParser *amp = new mathParser(fun);
@@ -89,7 +89,8 @@ void mainWindow::calcGivenIntegral() {
             // amp->add_var(params->at(0).toUtf8().constData(), upper);
             // long double b = amp->eval();
 
-            QString ans = QString(to_string_with_precision<long double> (simpson(amp, params->at(0).toUtf8().constData(), lower, upper, n_val), 15).c_str());
+            // QString ans = QString(to_string_with_precision<long double> (simpson(amp, params->at(0).toUtf8().constData(), lower, upper, n_val), 15).c_str());
+            QString ans = QString(to_string_with_precision<long double> (simpson(amp, params->at(0).toUtf8().constData(), lower, upper, 999), 15).c_str());
             outputText->setText(ans);
 
           }catch(std::runtime_error& e) {
@@ -180,7 +181,8 @@ void mainWindow::showPlots() {
     if(!buff.empty()) {
       params->push_back(QString(buff.c_str()));
     }
-    if(params->size() <= 2) {
+    // if(params->size() <= 2) {
+    if(params->size() <= 1) {
       fun = text.substr(text.find('=')+1);
       mathParser *mp = new mathParser(fun);
       try {
@@ -194,7 +196,8 @@ void mainWindow::showPlots() {
       }
     }else{
       QMessageBox msgBox;
-      msgBox.setText("Plot only works for less than 2 parameters.");
+    //   msgBox.setText("Plot only works for less than 2 parameters.");
+      msgBox.setText("Plot only works for functions with one parameter.");
       msgBox.setIcon(QMessageBox::Critical);
       msgBox.exec();
     }
